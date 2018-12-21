@@ -1,0 +1,30 @@
+{
+  "name": "test-users",
+  "version": "1.0.0",
+  "description": "test work",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icrazyk/test-users.git"
+  },
+  "keywords": [
+    "webpack",
+    "vue",
+    "babel",
+    "vuetify"
+  ],
+  "author": "Dmitriy Karyakin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/icrazyk/test-users/issues"
+  },
+  "homepage": "https://github.com/icrazyk/test-users#readme",
+  "dependencies": {
+    "vue": "^2.5.21",
+    "vuetify": "^1.3.13",
+    "webpack": "^4.27.1"
+  }
+}
