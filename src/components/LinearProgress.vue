@@ -2,12 +2,10 @@
   <div :class="$style.progress">
     <VProgressLinear
       :indeterminate="true"
-      :class="
-        [
-          'ma-0',
-          $style.line,
-        ]
-      "
+      :class="[
+        'ma-0',
+        $style.line,
+      ]"
     />
   </div>
 </template>

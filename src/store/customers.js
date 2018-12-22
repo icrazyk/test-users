@@ -45,6 +45,7 @@ const actions = {
     const { filters, total } = state;
     let newTotal = total;
     let customers = [];
+    const params = resolveFilters(filters);
 
     // get total if need
     if (total === 0 || snapshotSearch !== filters.search) {
@@ -63,7 +64,7 @@ const actions = {
     // get customers
     try {
       customers = await api.get('/data/Users', {
-        params: resolveFilters(filters),
+        params,
       });
     } catch(e) {
       // error handler

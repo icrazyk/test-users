@@ -45,6 +45,7 @@ export default {
     filters: {
       // Update query params
       handler(filters) {
+        // remove empty, clean up address line :) 
         const query = Object.entries(filters)
           .filter(([, value]) => !!value)
           .reduce((acc, [key, value]) => {
