@@ -1,6 +1,7 @@
 // const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   // entry: './src/index.js',
@@ -14,7 +15,12 @@ module.exports = {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            }
+          }
         ],
       },
       {
@@ -22,6 +28,10 @@ module.exports = {
         use: [
           'file-loader',
         ],
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
       },
     ],
   },
@@ -31,5 +41,6 @@ module.exports = {
       title: 'I won`t die',
       template: 'public/index.html',
     }),
+    new VueLoaderPlugin(),
   ]
 };
