@@ -1,10 +1,19 @@
-<template>
-  <div :class="$style.wrap">test</div>
-</template>
+<script>
+import Table from 'Components/Table';
 
-<style module>
-.wrap {
-  color: blue;
+export default {
+  components: {
+    Table,
+  },
 }
-</style>
+</script>
 
+<template>
+  <v-app id="inspire">
+    <v-content>
+      <v-container fluid>
+        <Table />
+      </v-container>
+    </v-content>
+  </v-app>
+</template>
