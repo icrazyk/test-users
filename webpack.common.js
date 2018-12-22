@@ -1,21 +1,45 @@
-// const path = require('path');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
-  // entry: './src/index.js',
-  // output: {
-  //   filename: '[name].bundle.js',
-  //   path: path.resolve(__dirname, 'dist')
-  // },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+      'Components': path.resolve(__dirname, 'src/components/'),
+      'Views': path.resolve(__dirname, 'src/views/'),
+      'Utils': path.resolve(__dirname, 'src/utils/'),
+    },
+    extensions: [
+      '.vue', 
+      '.js',
+    ],
+  },
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        oneOf: [
+          {
+            resourceQuery: /module/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                }
+              }
+            ]
+          },
+          {
+            use: [
+              'style-loader',
+              'css-loader'
+            ]
+          }
+        ]
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
@@ -23,13 +47,18 @@ module.exports = {
           'file-loader',
         ],
       },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
     ],
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      title: 'I won`t die',
+      title: 'CRUD',
       template: 'public/index.html',
     }),
+    new VueLoaderPlugin(),
   ]
 };
