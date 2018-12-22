@@ -2,62 +2,85 @@ import api from '@/api';
 
 const init = () => ({
   customers: [],
+  total: 0,
   filters: {
     page: 1,
     rowsPerPage: 5,
     search: '',
   },
-  total: 0
+  loading: {
+    get: false,
+  },
 });
 
 let snapshotSearch = '';
 
+const resolveFilters = ({ search, rowsPerPage, page }) => {
+  let where;
+  if (search !== '') {
+    where = `name like '%${search}%' or email like '%${search}%'`
+  }
+  const offset = (page * rowsPerPage) - rowsPerPage;
+  return {
+    pageSize: rowsPerPage,
+    offset,
+    where,
+  }
+}
+
+const difference = (source, patch) => {
+  let diff = {};
+  Object.entries(source).forEach(([key, value]) => {
+    if (patch[key] && patch[key] !== value) {
+      diff[key] = value;
+    }
+  });
+  return Object.entries(diff).length ? diff : false;
+}
+
 const actions = {
-  get: async ({ commit, state }, filters) => {
-    if (filters) {
-      commit('setFilters', filters);
+  get: async ({ commit, state }, payload) => {
+    commit('setLoading', ['get', true]);
+    commit('setFilters', payload);
+    const { filters, total } = state;
+    let newTotal = total;
+    let customers = [];
+
+    // get total if need
+    if (total === 0 || snapshotSearch !== filters.search) {
+      snapshotSearch = filters.search;
+      try {
+        newTotal = await api.get('/data/Users/count', {
+          params: {
+            where: params.where,
+          },
+        })
+      } catch(e) {
+        // error handler
+      }
     }
-    const { filters: { search, rowsPerPage, page }, total } = state;
-    let where;
-    if (search !== '') {
-      where = `name like '%${search}%' or email like '%${search}%'`
-    }
-    const offset = (page * rowsPerPage) - rowsPerPage;
-    const customers = await api.get('/data/Users', {
-      params: {
-        pageSize: rowsPerPage,
-        offset,
-        where,
-      },
-    });
-    commit('set', customers);
-    // Обновляем total при первой загрузке или если изменился запрос
-    if (customers.length && total === 0 || snapshotSearch !== search) {
-      console.log('search', search, 'snapshotSearch', snapshotSearch);
-      snapshotSearch = search;
-      const total = await api.get('/data/Users/count', {
-        params: {
-          where,
-        },
+    
+    // get customers
+    try {
+      customers = await api.get('/data/Users', {
+        params: resolveFilters(filters),
       });
-      commit('setTotal', total);
+    } catch(e) {
+      // error handler
     }
+
+    commit('setTotal', newTotal);
+    commit('set', customers);
+    commit('setLoading', ['get', false]);
   },
 
-  setFilters: async ({ commit, state, dispatch }, filters) => {
-    let diff = false;
-    Object.entries(state.filters).forEach(([key, value]) => {
-      if (filters[key] && filters[key] !== value) {
-        diff = true;
-      }
-    });
+  setFilters: async ({ state, dispatch }, filters) => {
+    const diff = difference(state.filters, filters);
     if (!diff) return;
-    if ('search' in filters && state.filters.search !== filters.search) {
-      debugger;
+    if (diff.search) {
       filters.page = 1;
     }
-    commit('setFilters', filters);
-    await dispatch('get');
+    await dispatch('get', filters);
   },
 };
 
@@ -70,6 +93,9 @@ const mutations = {
   },
   setTotal: (state, total) => {
     state.total = total;
+  },
+  setLoading: (state, [name, status]) => {
+    state.loading[name] = status;
   },
 };
 

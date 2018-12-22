@@ -18,13 +18,13 @@ export default {
       },
     ],
     rowsPerPageItems: [5, 10, 20],
-    loading: false,
   }),
   computed: {
     ...mapState('customers', {
       customers: 'customers',
       filters: 'filters',
       total: 'total',
+      loading: 'loading',
     }),
     pagination: {
       get() {
@@ -34,20 +34,17 @@ export default {
         };
       },
       async set(value) {
-        this.loading = true;
         await this.setFilters({
           page: value.page,
           rowsPerPage: value.rowsPerPage,
         });
-        this.loading = false;
       },
     },
   },
   watch: {
     filters: {
-      // Обновляем параметры фильтров в query
+      // Update query params
       handler(filters) {
-        debugger;
         const query = Object.entries(filters)
           .filter(([, value]) => !!value)
           .reduce((acc, [key, value]) => {
@@ -61,13 +58,12 @@ export default {
     },
   },
   async mounted() {
-    this.loading = true;
     const { page = 1, rowsPerPage = 5, search = '' } = this.$route.query;
     await this.getCustomers({
       page: Number(page),
       rowsPerPage: Number(rowsPerPage),
       search,
-    })
+    });
   },
   methods: {
     ...mapActions('customers', {
@@ -83,7 +79,7 @@ export default {
     :headers="headers"
     :items="customers"
     :totalItems="total"
-    :loading="loading"
+    :loading="loading.get"
     :rowsPerPageItems="rowsPerPageItems"
     :pagination.sync="pagination"
     class="elevation-1"
