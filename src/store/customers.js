@@ -31,7 +31,7 @@ const resolveFilters = ({ search, rowsPerPage, page }) => {
 const difference = (source, patch) => {
   let diff = {};
   Object.entries(source).forEach(([key, value]) => {
-    if (patch[key] && patch[key] !== value) {
+    if (key in patch && patch[key] !== value) {
       diff[key] = value;
     }
   });

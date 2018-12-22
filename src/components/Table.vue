@@ -33,8 +33,8 @@ export default {
           rowsPerPage: this.filters.rowsPerPage,
         };
       },
-      async set(value) {
-        await this.setFilters({
+      set(value) {
+        this.setFilters({
           page: value.page,
           rowsPerPage: value.rowsPerPage,
         });
