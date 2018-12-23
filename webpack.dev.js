@@ -9,6 +9,33 @@ module.exports = merge(common, {
     contentBase: './dist',
     hot: true,
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        oneOf: [
+          {
+            resourceQuery: /module/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                }
+              }
+            ]
+          },
+          {
+            use: [
+              'style-loader',
+              'css-loader'
+            ]
+          }
+        ]
+      },
+    ],
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
   ]

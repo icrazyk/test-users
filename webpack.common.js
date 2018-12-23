@@ -19,29 +19,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        oneOf: [
-          {
-            resourceQuery: /module/,
-            use: [
-              'style-loader',
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: true,
-                }
-              }
-            ]
-          },
-          {
-            use: [
-              'style-loader',
-              'css-loader'
-            ]
-          }
-        ]
-      },
-      {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
           'file-loader',
