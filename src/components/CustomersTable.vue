@@ -87,6 +87,15 @@ export default {
         >
           <v-icon dark>edit</v-icon>
         </v-btn>
+        <v-btn 
+          fab 
+          flat 
+          small
+          color="error"
+          @click="$emit('delete', props.item)"
+        >
+          <v-icon dark>delete</v-icon>
+        </v-btn>
       </td>
     </template>
   </v-data-table>

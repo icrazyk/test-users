@@ -11,6 +11,9 @@ const actions = {
       password: user.password === '' ? undefined : user.password,
     });
   },
+  delete: async (store, user) => {
+    await api.delete(`/data/Users/${user.objectId}`);
+  },
 };
 
 export default {

@@ -4,6 +4,7 @@ import CustomersTable from 'Components/CustomersTable';
 import CustomersToolbar from 'Components/CustomersToolbar';
 import CustomersModalCreate from 'Components/CustomersModalCreate';
 import CustomersModalEdit from 'Components/CustomersModalEdit';
+import CustomersModalDelete from 'Components/CustomersModalDelete';
 
 export default {
   components: {
@@ -12,17 +13,19 @@ export default {
     CustomersToolbar,
     CustomersModalCreate,
     CustomersModalEdit,
+    CustomersModalDelete,
   },
   data: () => ({
     createModal: false,
     editModal: false,
+    deleteModal: false,
   }),
   methods: {
     reloadTable() {
-      this.$refs.table.getCustomers({ updateTotal: true, page: 1, search: '' });
+      this.$refs.table.getCustomers({ updateTotal: true });
     },
-    updateTableItem(user) {
-      this.$refs.table.updateItem(user);
+    updateItem(item) {
+      this.$refs.table.updateItem(item);
     },
     editItem(item) {
       this.editModal = true;
@@ -33,6 +36,13 @@ export default {
           email: item.email,
           objectId: item.objectId,
         });
+      });
+    },
+    deleteItem(item) {
+      this.deleteModal = true;
+      this.$refs.deleteModal.setModel({
+        email: item.email,
+        objectId: item.objectId,
       });
     },
   },
@@ -57,6 +67,7 @@ export default {
     <CustomersTable 
       ref="table"
       @edit="editItem"
+      @delete="deleteItem"
     />
     <CustomersModalCreate 
       v-model="createModal"
@@ -65,7 +76,12 @@ export default {
     <CustomersModalEdit
       ref="editModal"
       v-model="editModal"
-      @edited="updateTableItem"
+      @edited="updateItem"
+    />
+    <CustomersModalDelete
+      ref="deleteModal"
+      v-model="deleteModal"
+      @deleted="reloadTable"
     />
   </v-container>
 </template>
