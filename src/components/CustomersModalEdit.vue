@@ -15,7 +15,7 @@ export default {
     }),
     async send(model) {
       await this.edit(model);
-      this.$emit('edit', model);
+      this.$emit('edited', model);
     },
     setModel(model) {
       Object.assign(this.model, model);

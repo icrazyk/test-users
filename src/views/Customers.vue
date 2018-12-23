@@ -21,6 +21,9 @@ export default {
     reloadTable() {
       this.$refs.table.getCustomers({ updateTotal: true, page: 1, search: '' });
     },
+    updateTableItem(user) {
+      this.$refs.table.updateItem(user);
+    },
     editItem(item) {
       this.editModal = true;
       // 'setModel' after form will be reseted. See CustomersModal`s 'watch'
@@ -57,11 +60,12 @@ export default {
     />
     <CustomersModalCreate 
       v-model="createModal"
-      @created="reloadTable" 
+      @created="reloadTable"
     />
     <CustomersModalEdit
       ref="editModal"
       v-model="editModal"
+      @edited="updateTableItem"
     />
   </v-container>
 </template>

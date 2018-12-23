@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 import LinearProgress from 'Components/LinearProgress';
 
 export default {
@@ -52,6 +52,9 @@ export default {
     ...mapActions('customers', {
       setFilters: 'setFilters',
       getCustomers: 'get',
+    }),
+    ...mapMutations('customers', {
+      updateItem: 'updateItem',
     }),
   },
 }

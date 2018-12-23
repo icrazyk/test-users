@@ -111,6 +111,10 @@ const mutations = {
   setLoading: (state, [name, status]) => {
     state.loading[name] = status;
   },
+  updateItem: (state, user) => {
+    const item = state.customers.find(i => i.objectId === user.objectId);
+    Object.assign(item, user);
+  },
 };
 
 export default {
