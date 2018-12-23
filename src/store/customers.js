@@ -1,4 +1,6 @@
 import api from '@/api';
+let cancelGet;
+let cancelTotal;
 
 const init = () => ({
   customers: [],
@@ -48,10 +50,13 @@ const actions = {
     // get total
     if (updateTotal) {
       try {
+        if (cancelTotal) cancelTotal.cancel();
+        cancelTotal = api.CancelToken.source();
         total = await api.get('/data/Users/count', {
           params: {
             where: params.where,
           },
+          cancelToken: cancelTotal.token,
         })
       } catch(e) {
         // error handler
@@ -60,8 +65,11 @@ const actions = {
     
     // get customers
     try {
+      if (cancelGet) cancelGet.cancel();
+      cancelGet = api.CancelToken.source();
       customers = await api.get('/data/Users', {
         params,
+        cancelToken: cancelGet.token,
       });
     } catch(e) {
       // error handler

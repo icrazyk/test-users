@@ -13,8 +13,8 @@ export default {
       get() {
         return this.filters.search;
       },
-      set(value) {
-        debounceEdit(value);
+      set(search) {
+        debounceEdit(search);
       },
     }
   },
