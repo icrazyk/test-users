@@ -41,30 +41,8 @@ export default {
       },
     },
   },
-  watch: {
-    filters: {
-      // Update query params
-      handler(filters) {
-        // remove empty, clean up address line :) 
-        const query = Object.entries(filters)
-          .filter(([, value]) => !!value)
-          .reduce((acc, [key, value]) => {
-            acc[key] = value;
-            return acc;
-          }, {});
-
-        this.$router.push({ query: { ...query } });
-      },
-      deep: true,
-    },
-  },
   async mounted() {
-    const { page = 1, rowsPerPage = 5, search = '' } = this.$route.query;
-    await this.getCustomers({
-      page: Number(page),
-      rowsPerPage: Number(rowsPerPage),
-      search,
-    });
+    await this.getCustomers({ updateTotal: true });
   },
   methods: {
     ...mapActions('customers', {

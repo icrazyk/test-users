@@ -13,8 +13,6 @@ const init = () => ({
   },
 });
 
-let snapshotSearch = '';
-
 const resolveFilters = ({ search, rowsPerPage, page }) => {
   let where;
   if (search !== '') {
@@ -39,19 +37,18 @@ const difference = (source, patch) => {
 }
 
 const actions = {
-  get: async ({ commit, state }, payload) => {
+  get: async ({ commit, state }, { updateTotal = false, filters: payloadFilters = {} }) => {
     commit('setLoading', ['get', true]);
-    commit('setFilters', payload);
-    const { filters, total } = state;
-    let newTotal = total;
+    commit('setFilters', payloadFilters);
+    const { filters, total: currentTotal } = state;
+    let total = currentTotal;
     let customers = [];
     const params = resolveFilters(filters);
 
-    // get total if need
-    if (total === 0 || snapshotSearch !== filters.search) {
-      snapshotSearch = filters.search;
+    // get total
+    if (updateTotal) {
       try {
-        newTotal = await api.get('/data/Users/count', {
+        total = await api.get('/data/Users/count', {
           params: {
             where: params.where,
           },
@@ -70,7 +67,7 @@ const actions = {
       // error handler
     }
 
-    commit('setTotal', newTotal);
+    commit('setTotal', total);
     commit('set', customers);
     commit('setLoading', ['get', false]);
   },
@@ -78,10 +75,13 @@ const actions = {
   setFilters: async ({ state, dispatch }, filters) => {
     const diff = difference(state.filters, filters);
     if (!diff) return;
-    if (diff.search) {
-      filters.page = 1;
+    let updateTotal = false;
+    let patch = {};
+    if ('search' in diff) {
+      patch.page = 1;
+      updateTotal = true;
     }
-    await dispatch('get', filters);
+    await dispatch('get', { updateTotal, filters: Object.assign(filters, patch) });
   },
 };
 
