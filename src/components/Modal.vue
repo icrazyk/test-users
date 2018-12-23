@@ -1,5 +1,5 @@
 <script>
-import { mapActions } from 'vuex';
+import rules from 'Utils/validate';
 
 export default {
   props: {
@@ -9,11 +9,10 @@ export default {
     },
   },
   data: () => ({
+    width: 400,
+    modalTitle: 'Title',
     loading: false,
-    model: {
-      email: '',
-      objectId: '',
-    },
+    model: {},
   }),
   computed: {
     dialog: {
@@ -26,20 +25,28 @@ export default {
     },
   },
   methods: {
-    ...mapActions('customer', {
-      delete: 'delete',
-    }),
     setModel(model) {
+      this.resetModel();
       Object.assign(this.model, model);
     },
+    resetModel() {
+      // reset model
+    },
+    validate() {
+      return true;
+    },
+    send() {
+      // send model
+      // emit event
+    },
     async submit() {
+      if (!this.validate()) return;
       this.loading = true;
       try {
-        await this.delete(this.model);
+        await this.send(this.model);
       } catch (e) {
         // error handler
       }
-      this.$emit('deleted');
       this.loading = false;
       this.dialog = false;
     },
@@ -50,44 +57,25 @@ export default {
 <template>
   <v-dialog
     v-model="dialog"
-    width="400"
+    :width="width"
   >
     <v-card>
       <v-card-title
         class="headline grey lighten-2"
         primary-title
       >
-        Delete customer
+        {{ modalTitle }}
       </v-card-title>
 
       <v-form
         ref="form" 
         @submit.prevent="submit"
       >
-        <v-card-text>
-          Do you want to remove user <b>{{ model.email }}</b>?
-        </v-card-text>
-
+        <slot />
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            flat
-            color="primary"
-            @click="dialog = false"
-            :disabled="loading"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            flat
-            color="error"
-            type="submit"
-            :disabled="loading"
-            :loading="loading"
-          >
-            Delete
-          </v-btn>
+          <slot name="actions" />
         </v-card-actions>
       </v-form>
     </v-card>
