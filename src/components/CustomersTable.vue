@@ -16,6 +16,10 @@ export default {
         text: 'E-mail',
         sortable: false,
       },
+      {
+        text: 'Actions',
+        sortable: false,
+      },
     ],
     rowsPerPageItems: [5, 10, 20],
   }),
@@ -70,6 +74,17 @@ export default {
     >
       <td>{{ props.item.name }}</td>
       <td>{{ props.item.email }}</td>
+      <td>
+        <v-btn 
+          fab 
+          flat 
+          small
+          color="primary"
+          @click="$emit('edit', props.item)"
+        >
+          <v-icon dark>edit</v-icon>
+        </v-btn>
+      </td>
     </template>
   </v-data-table>
 </template>

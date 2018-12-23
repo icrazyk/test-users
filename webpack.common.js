@@ -9,6 +9,7 @@ module.exports = {
       '@': path.resolve(__dirname, 'src/'),
       'Components': path.resolve(__dirname, 'src/components/'),
       'Views': path.resolve(__dirname, 'src/views/'),
+      'Utils': path.resolve(__dirname, 'src/utils/'),
     },
     extensions: [
       '.vue', 

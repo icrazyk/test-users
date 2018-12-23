@@ -15,16 +15,21 @@ const init = () => ({
   },
 });
 
-const resolveFilters = ({ search, rowsPerPage, page }) => {
+const resolveFilters = ({ search, rowsPerPage: pageSize, page }) => {
   let where;
   if (search !== '') {
     where = `name like '%${search}%' or email like '%${search}%'`
   }
-  const offset = (page * rowsPerPage) - rowsPerPage;
+  const offset = (page * pageSize) - pageSize;
   return {
-    pageSize: rowsPerPage,
+    pageSize,
     offset,
     where,
+    // BUG: props filter not work if 'props' is array and has few params
+    // props: ['name', 'email', 'objectId'],
+    // BUG: not sort if 'sortBy' is array, but work if its string 
+    // sortBy: ['created desc'],
+    sortBy: 'created desc',
   }
 }
 
