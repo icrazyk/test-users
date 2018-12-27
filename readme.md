@@ -24,14 +24,16 @@
 - Результат присылать в виде ссылки на github (или аналоги)
 - Сборка доступна онлайн (например Github Pages)
 
-## Before
+# Development
+
+## Project setup
 
 `npm install`
 
-## Development
+## Compiles and hot-reloads for development
 
 `npm start`
 
-## Build
+## Compiles for production
 
 `npm run build`
